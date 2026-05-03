@@ -3,1075 +3,529 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AGRANA Risk Manager</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<title>F\u00fchrungsmoment \u2013 F\u00fchrungskr\u00e4fte-Einmaleins</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0d0f14;
-    --panel: #13161e;
-    --border: rgba(255,255,255,0.07);
-    --gold: #f5c842;
-    --blue: #3b8bff;
-    --red: #ff4757;
-    --green: #2ed573;
-    --text: #e8eaf0;
-    --muted: rgba(232,234,240,0.4);
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'IBM Plex Mono', monospace;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 2rem 1rem 4rem;
-    overflow-x: hidden;
-  }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b1220;--card:rgba(91,155,214,0.05);--card-h:rgba(91,155,214,0.10);
+  --b1:#e3f0fc;--b2:#b4d7f5;--b3:#7cbde8;--b4:#4da3db;--b5:#3b8ec9;--b6:#2a6fa3;
+  --g1:#e8edf3;--g2:#c0cad6;--g3:#8d9bab;--g4:#5e6f82;--g5:#3a4a5c;
+  --acc:#38d9a9;--acc-d:rgba(56,217,169,0.15);
+  --xp:#f0c040;--xp-d:rgba(240,192,64,0.12);
+  --txt:#d0dae6;--txt-b:#f0f4f8;--txt-d:rgba(200,215,230,0.5);
+  --r:18px;--f:'DM Sans',sans-serif;--fd:'Space Grotesk',sans-serif;
+}
+body{background:var(--bg);font-family:var(--f);color:var(--txt);min-height:100vh;overflow-x:hidden}
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:linear-gradient(160deg,#0b1220,#111d30 35%,#0e1828 70%,#0b1220)}
+.bg-orb{position:absolute;border-radius:50%;pointer-events:none}
+@keyframes floatOrb{0%{transform:translate(0,0) scale(1)}50%{transform:translate(25px,-18px) scale(1.08)}100%{transform:translate(-18px,22px) scale(0.94)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.5)}to{opacity:1;transform:scale(1)}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(56,217,169,0.3)}50%{box-shadow:0 0 0 10px rgba(56,217,169,0)}}
+@keyframes xpFloat{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-50px)}}
+@keyframes radarGrow{from{opacity:0;transform:scale(0.4)}to{opacity:1;transform:scale(1)}}
+@keyframes shine{0%{left:-100%}100%{left:200%}}
+@keyframes tickUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cardReveal{from{opacity:0;transform:perspective(600px) rotateY(-12deg) scale(0.92)}to{opacity:1;transform:perspective(600px) rotateY(0) scale(1)}}
+@keyframes traitPop{0%{opacity:0;transform:scale(0) rotate(-10deg)}60%{transform:scale(1.12) rotate(2deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
 
-  /* grid bg */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
+.app{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:var(--card);border:1px solid rgba(91,155,214,0.12);border-radius:var(--r);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);max-width:680px;width:100%;padding:44px 40px;animation:cardReveal 0.6s ease-out;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(91,155,214,0.3),transparent)}
+.card::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(91,155,214,0.03),transparent);animation:shine 4s ease-in-out infinite;pointer-events:none}
 
-  .wrapper { position: relative; z-index: 1; width: 100%; max-width: 900px; }
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(91,155,214,0.12);border:1px solid rgba(91,155,214,0.2);border-radius:100px;padding:5px 14px;font-size:11px;font-weight:600;color:var(--b3);letter-spacing:.8px;text-transform:uppercase;margin-bottom:20px}
+.title{font-family:var(--fd);font-weight:700;font-size:32px;line-height:1.2;margin:0 0 6px;color:var(--txt-b)}
+.subtitle{font-size:15px;color:var(--g3);margin:0 0 28px;line-height:1.65}
+.body-text{font-size:15px;line-height:1.75;color:var(--txt);margin:0 0 24px}
+.divider{height:1px;margin:24px 0;background:linear-gradient(90deg,transparent,rgba(91,155,214,0.15),transparent)}
 
-  /* HEADER */
-  header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-    animation: fadeDown 0.6s ease both;
-  }
-  .tag {
-    display: inline-block;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    color: var(--gold);
-    border: 1px solid var(--gold);
-    padding: 0.2rem 0.8rem;
-    border-radius: 2px;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-  }
-  h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.8rem, 7vw, 5.5rem);
-    letter-spacing: 0.05em;
-    line-height: 1;
-    color: var(--text);
-  }
-  h1 span { color: var(--gold); }
-  .subtitle {
-    font-size: 0.78rem;
-    color: var(--muted);
-    margin-top: 0.5rem;
-    letter-spacing: 0.05em;
-  }
+/* HUD */
+.hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.clock{font-family:var(--fd);font-size:28px;font-weight:700;color:var(--b2);letter-spacing:1px}
+.clock-label{font-size:11px;color:var(--g4);text-transform:uppercase;letter-spacing:.5px}
+.xp-box{display:flex;align-items:center;gap:8px;background:var(--xp-d);border:1px solid rgba(240,192,64,0.2);border-radius:100px;padding:6px 16px;position:relative}
+.xp-val{font-family:var(--fd);font-weight:700;font-size:16px;color:var(--xp)}
+.xp-label{font-size:11px;color:rgba(240,192,64,0.6)}
+.xp-float{position:absolute;top:-8px;right:12px;font-family:var(--fd);font-weight:700;font-size:18px;color:var(--xp);animation:xpFloat 1.2s ease-out forwards;pointer-events:none}
 
-  /* TICKER */
-  .ticker {
-    background: rgba(245,200,66,0.08);
-    border: 1px solid rgba(245,200,66,0.2);
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    font-size: 0.72rem;
-    color: var(--gold);
-    letter-spacing: 0.08em;
-    margin-bottom: 2rem;
-    display: flex;
-    gap: 2rem;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-  .ticker-item { animation: none; }
-  .ticker-item.up { color: var(--green); }
-  .ticker-item.down { color: var(--red); }
+/* Timeline */
+.timeline{position:relative;height:6px;background:rgba(91,155,214,0.1);border-radius:3px;margin-bottom:28px}
+.timeline-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--b5),var(--b3));transition:width .8s ease;position:relative}
+.timeline-dot{position:absolute;right:-5px;top:-4px;width:14px;height:14px;border-radius:50%;background:var(--b3);border:3px solid var(--bg);box-shadow:0 0 12px rgba(91,155,214,0.4);animation:pulseGlow 2s infinite}
+.tl-labels{display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--g4);font-weight:500;margin-bottom:12px}
 
-  /* SCENARIO BOX */
-  .scenario {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--gold);
-    border-radius: 8px;
-    padding: 1.5rem 2rem;
-    margin-bottom: 2rem;
-    animation: fadeUp 0.5s 0.2s ease both;
-  }
-  .scenario-label {
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 0.6rem;
-  }
-  .scenario-text {
-    font-size: 0.92rem;
-    line-height: 1.7;
-    color: var(--text);
-  }
-  .scenario-text strong { color: var(--gold); }
+/* Scenario */
+.sc-header{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.sc-emoji{font-size:36px;animation:popIn .4s ease-out}
+.sc-tag{font-size:12px;color:var(--b3);font-weight:600;text-transform:uppercase;letter-spacing:.8px}
+.sc-title{font-family:var(--fd);font-size:22px;font-weight:700;color:var(--txt-b);margin:0 0 16px}
+.sc-text{font-size:15px;line-height:1.75;color:var(--txt);margin:0 0 24px;padding:16px 20px;background:rgba(91,155,214,0.04);border-radius:14px;border-left:3px solid rgba(91,155,214,0.25)}
 
-  /* METERS */
-  .meters {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin-bottom: 2rem;
-    animation: fadeUp 0.5s 0.3s ease both;
-  }
-  .meter-card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1rem 1.2rem;
-  }
-  .meter-label {
-    font-size: 0.62rem;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 0.4rem;
-  }
-  .meter-value {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2rem;
-    letter-spacing: 0.05em;
-  }
-  .meter-bar {
-    height: 4px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 2px;
-    margin-top: 0.5rem;
-    overflow: hidden;
-  }
-  .meter-fill {
-    height: 100%;
-    border-radius: 2px;
-    transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
-  }
+/* Options */
+.option{display:flex;align-items:flex-start;gap:14px;width:100%;text-align:left;background:rgba(91,155,214,0.04);border:1px solid rgba(91,155,214,0.12);border-radius:16px;padding:18px 20px;margin-bottom:10px;font-size:15px;line-height:1.6;color:var(--txt);cursor:pointer;transition:all .3s ease;font-family:var(--f)}
+.option:hover:not(.disabled){background:var(--card-h);border-color:rgba(91,155,214,0.3);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.25)}
+.opt-key{flex-shrink:0;width:32px;height:32px;border-radius:10px;background:rgba(91,155,214,0.1);border:1px solid rgba(91,155,214,0.2);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-weight:700;font-size:13px;color:var(--b3);transition:all .3s}
+.option:hover:not(.disabled) .opt-key{background:rgba(91,155,214,0.2);border-color:var(--b4)}
+.option.chosen{background:rgba(56,217,169,0.08);border-color:rgba(56,217,169,0.3);cursor:default}
+.option.chosen .opt-key{background:var(--acc-d);border-color:var(--acc);color:var(--acc)}
+.option.not-chosen{opacity:.25;cursor:default}
+.option.disabled{cursor:default}
 
-  /* CHOICE CARDS */
-  .choice-section {
-    animation: fadeUp 0.5s 0.4s ease both;
-  }
-  .choice-header {
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-  }
-  .choices {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-  @media(max-width: 600px) { .choices { grid-template-columns: 1fr; } .meters { grid-template-columns: 1fr 1fr; } }
+/* Result */
+.result{background:rgba(91,155,214,0.04);border:1px solid rgba(91,155,214,0.1);border-radius:16px;padding:22px;margin-top:18px;animation:fadeUp .45s ease-out}
+.result-text{font-size:14px;line-height:1.7;color:var(--txt);margin:0 0 14px}
+.trait-reveal{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--acc-d);border:1px solid rgba(56,217,169,0.2);border-radius:12px;animation:traitPop .5s ease-out .2s both}
+.trait-name{font-size:14px;color:var(--txt-b);font-weight:600;margin-top:2px}
+.trait-label{font-size:11px;color:var(--acc);text-transform:uppercase;letter-spacing:.8px;font-weight:600}
 
-  .choice-card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1.5rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-  .choice-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .choice-card.blue-card::before { background: radial-gradient(circle at 50% 0%, rgba(59,139,255,0.12), transparent 70%); }
-  .choice-card.gold-card::before { background: radial-gradient(circle at 50% 0%, rgba(245,200,66,0.1), transparent 70%); }
-  .choice-card:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
-  .choice-card:hover::before { opacity: 1; }
-  .choice-card.selected.blue-card { border-color: var(--blue); box-shadow: 0 0 20px rgba(59,139,255,0.2); }
-  .choice-card.selected.gold-card { border-color: var(--gold); box-shadow: 0 0 20px rgba(245,200,66,0.2); }
-  .choice-card.disabled { opacity: 0.4; pointer-events: none; }
+.next-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--b4),var(--b5));color:#fff;border:none;border-radius:100px;padding:13px 28px;font-size:14px;font-weight:700;font-family:var(--f);cursor:pointer;transition:all .3s;margin-top:16px}
+.next-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(59,142,201,0.3)}
+.start-btn{font-size:16px;padding:16px 36px;background:linear-gradient(135deg,var(--b3),var(--b5))}
+.outline-btn{background:transparent;border:1.5px solid rgba(91,155,214,0.3);color:var(--b3)}
+.outline-btn:hover{background:rgba(91,155,214,0.08);border-color:var(--b3)}
 
-  .choice-num {
-    font-size: 0.62rem;
-    letter-spacing: 0.2em;
-    color: var(--muted);
-    margin-bottom: 0.6rem;
-    text-transform: uppercase;
-  }
-  .choice-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.5rem;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.8rem;
-  }
-  .blue-card .choice-title { color: var(--blue); }
-  .gold-card .choice-title { color: var(--gold); }
+/* Profile select */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}
+.profile-card{background:rgba(91,155,214,0.04);border:1px solid rgba(91,155,214,0.12);border-radius:18px;padding:28px 22px;text-align:center;cursor:pointer;transition:all .35s ease;position:relative;overflow:hidden}
+.profile-card:hover{background:var(--card-h);border-color:rgba(91,155,214,0.35);transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,.3)}
+.profile-card .pc-icon{font-size:44px;display:block;margin-bottom:14px}
+.profile-card .pc-title{font-family:var(--fd);font-size:16px;font-weight:700;color:var(--txt-b);margin-bottom:8px}
+.profile-card .pc-desc{font-size:13px;line-height:1.55;color:var(--g3)}
+.profile-card .pc-tag{display:inline-block;margin-top:14px;padding:5px 14px;border-radius:100px;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.profile-card.new-p .pc-tag{background:rgba(91,155,214,0.12);color:var(--b3);border:1px solid rgba(91,155,214,0.2)}
+.profile-card.exp-p .pc-tag{background:var(--acc-d);color:var(--acc);border:1px solid rgba(56,217,169,0.2)}
 
-  .choice-instruments {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    margin-bottom: 1rem;
-  }
-  .instrument {
-    font-size: 0.75rem;
-    color: var(--muted);
-    padding: 0.35rem 0.6rem;
-    background: rgba(255,255,255,0.04);
-    border-radius: 4px;
-    border-left: 2px solid rgba(255,255,255,0.1);
-  }
-  .blue-card .instrument { border-left-color: var(--blue); }
-  .gold-card .instrument { border-left-color: var(--gold); }
+/* Compass / Radar */
+.compass{text-align:center;margin-top:28px}
+.type-box{margin:24px auto;padding:20px 28px;background:rgba(56,217,169,0.06);border:1px solid rgba(56,217,169,0.15);border-radius:16px;text-align:center;animation:fadeUp .6s ease-out .5s both}
+.type-label{font-size:11px;color:var(--acc);text-transform:uppercase;letter-spacing:1.2px;font-weight:600;margin-bottom:6px}
+.type-name{font-family:var(--fd);font-size:24px;font-weight:700;color:var(--txt-b)}
+.type-desc{font-size:14px;color:var(--g3);margin-top:8px;line-height:1.6}
 
-  .choice-pros-cons {
-    font-size: 0.72rem;
-    line-height: 1.6;
-    color: var(--muted);
-  }
-  .pro { color: var(--green); }
-  .con { color: var(--red); }
+.insight{background:rgba(91,155,214,0.04);border:1px solid rgba(91,155,214,0.1);border-radius:14px;padding:18px;margin-top:14px;text-align:left}
+.insight h4{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--b3);margin:0 0 8px;font-weight:600}
+.insight p{font-size:14px;line-height:1.6;color:var(--g3);margin:0}
+.reflection{font-style:italic;font-size:15px;line-height:1.7;color:var(--g3);padding:12px 0 0;margin:0}
 
-  /* CONFIRM BTN */
-  .confirm-btn {
-    width: 100%;
-    background: var(--gold);
-    color: #0d0f14;
-    border: none;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem;
-    letter-spacing: 0.1em;
-    padding: 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-    opacity: 0.3;
-    pointer-events: none;
-  }
-  .confirm-btn.active { opacity: 1; pointer-events: all; }
-  .confirm-btn.active:hover { background: #ffd84d; transform: translateY(-1px); }
+.kurs-box{display:flex;align-items:flex-start;gap:12px;padding:16px 18px;border-radius:14px;background:rgba(91,155,214,0.04);border:1px solid rgba(91,155,214,0.1);margin-bottom:24px}
+.kurs-box .kb-text{font-size:13px;line-height:1.65;color:var(--g3)}
+.kurs-box strong{color:var(--b2)}
 
-  /* RESULT */
-  .result-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(13,15,20,0.92);
-    backdrop-filter: blur(10px);
-    z-index: 50;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    padding: 2rem;
-  }
-  .result-overlay.show { display: flex; }
-  .result-box {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 2.5rem;
-    max-width: 560px;
-    width: 100%;
-    text-align: left;
-    animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
-  }
-  .result-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.5rem;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.3rem;
-  }
-  .result-subtitle {
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-  }
-  .result-outcome {
-    font-size: 0.88rem;
-    line-height: 1.8;
-    color: var(--text);
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background: rgba(255,255,255,0.03);
-    border-radius: 8px;
-    border-left: 3px solid var(--gold);
-  }
-  .result-score {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 3.5rem;
-    letter-spacing: 0.05em;
-    text-align: center;
-    margin-bottom: 0.3rem;
-  }
-  .result-score-label {
-    text-align: center;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-  }
-  .result-btns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.8rem;
-  }
-  .btn-next {
-    background: var(--gold);
-    color: #0d0f14;
-    border: none;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.1rem;
-    letter-spacing: 0.08em;
-    padding: 0.8rem;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-next:hover { background: #ffd84d; }
-  .btn-retry {
-    background: transparent;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.1rem;
-    letter-spacing: 0.08em;
-    padding: 0.8rem;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-retry:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+.day-preview{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:20px 0 28px}
+.day-slot{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;background:rgba(91,155,214,0.04);border:1px solid rgba(91,155,214,0.08);font-size:13px;color:var(--g3)}
+.day-slot .ds-time{font-family:var(--fd);font-weight:700;color:var(--b3);font-size:12px;min-width:42px}
 
-  /* ROUND INDICATOR */
-  .rounds {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: center;
-    margin-bottom: 2rem;
-    animation: fadeDown 0.5s 0.1s ease both;
-  }
-  .round-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.15);
-    transition: all 0.3s;
-  }
-  .round-dot.done { background: var(--green); border-color: var(--green); }
-  .round-dot.active { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 8px var(--gold); }
+.traits-collected{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.tc{padding:6px 12px;border-radius:100px;font-size:12px;font-weight:600;background:var(--acc-d);border:1px solid rgba(56,217,169,0.2);color:var(--acc);animation:tickUp .3s ease-out}
 
-  /* FINAL SCREEN */
-  .final-box {
-    text-align: center;
-  }
-  .final-score {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 6rem;
-    letter-spacing: 0.05em;
-    line-height: 1;
-  }
-
-  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-  @keyframes fadeDown { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
-  @keyframes popIn { from { opacity:0; transform:scale(0.85); } to { opacity:1; transform:scale(1); } }
-
-  /* READY SCREEN */
-  #ready-screen {
-    position: fixed; inset: 0; background: var(--bg); z-index: 150;
-    display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 2rem;
-  }
-  #ready-screen.hidden { display: none; }
-  .ready-box {
-    background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
-    padding: 3rem 2.5rem; max-width: 480px; width: 100%; text-align: center;
-    animation: popIn 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
-  }
-  .ready-round-label {
-    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 1rem;
-  }
-  .ready-title {
-    font-family: 'Bebas Neue', sans-serif; font-size: 4rem; letter-spacing: 0.08em;
-    color: var(--gold); line-height: 1; margin-bottom: 0.5rem;
-  }
-  .ready-player {
-    font-size: 1rem; color: var(--text); margin-bottom: 1.5rem; letter-spacing: 0.03em;
-  }
-  .ready-hint {
-    font-size: 0.78rem; color: var(--muted); line-height: 1.7;
-    margin-bottom: 2rem; letter-spacing: 0.02em;
-  }
-  .ready-hint strong { color: var(--gold); }
-  .ready-btn {
-    width: 100%; background: var(--gold); color: #0d0f14; border: none;
-    font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.1em;
-    padding: 1rem; border-radius: 8px; cursor: pointer; transition: all 0.2s;
-  }
-  .ready-btn:hover { background: #ffd84d; transform: translateY(-2px); }
-
-  /* NAME SCREEN hidden class */
-  #name-screen.hidden { display: none; }
-
-
-  #name-screen {
-    position: fixed; inset: 0; background: var(--bg); z-index: 200;
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; padding: 2rem;
-  }
-  #name-screen.hidden { display: none; }
-  .name-box {
-    background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
-    padding: 3rem 2.5rem; max-width: 480px; width: 100%; text-align: center;
-    animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
-  }
-  .name-box h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; letter-spacing: 0.05em; color: var(--gold); margin-bottom: 0.3rem; }
-  .name-box p { font-size: 0.78rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; letter-spacing: 0.04em; }
-  .name-input {
-    width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 8px; color: var(--text); font-family: 'IBM Plex Mono', monospace;
-    font-size: 1.1rem; padding: 0.9rem 1.2rem; text-align: center; outline: none;
-    transition: border-color 0.2s; margin-bottom: 1.2rem;
-  }
-  .name-input:focus { border-color: var(--gold); }
-  .name-input::placeholder { color: var(--muted); }
-  .name-start-btn {
-    width: 100%; background: var(--gold); color: #0d0f14; border: none;
-    font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.1em;
-    padding: 0.9rem; border-radius: 8px; cursor: pointer; transition: all 0.2s; margin-bottom: 1rem;
-  }
-  .name-start-btn:hover { background: #ffd84d; transform: translateY(-2px); }
-  .name-lb-btn {
-    background: transparent; color: var(--muted); border: 1px solid var(--border);
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; padding: 0.6rem 1.2rem;
-    border-radius: 6px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em;
-  }
-  .name-lb-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
-
-  /* TIMER */
-  .timer-bar-wrap {
-    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
-    padding: 0.7rem 1.2rem; margin-bottom: 1.5rem; display: flex; align-items: center;
-    gap: 1rem; animation: fadeUp 0.5s 0.15s ease both;
-  }
-  .timer-label { font-size: 0.62rem; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; white-space: nowrap; }
-  .timer-track { flex: 1; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
-  .timer-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width 1s linear, background 1s; width: 100%; }
-  .timer-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: var(--green); min-width: 3.5rem; text-align: right; transition: color 0.5s; }
-
-  /* LEADERBOARD OVERLAY */
-  #lb-overlay {
-    display: none; position: fixed; inset: 0; background: rgba(13,15,20,0.95);
-    backdrop-filter: blur(12px); z-index: 300; align-items: flex-start;
-    justify-content: center; padding: 2rem 1rem 4rem; overflow-y: auto;
-  }
-  #lb-overlay.show { display: flex; }
-  .lb-box {
-    background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
-    padding: 2.5rem; max-width: 640px; width: 100%; margin-top: 2rem;
-    animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
-  }
-  .lb-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
-  .lb-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 0.05em; color: var(--gold); }
-  .lb-close {
-    background: transparent; border: 1px solid var(--border); color: var(--muted);
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; padding: 0.4rem 0.9rem;
-    border-radius: 6px; cursor: pointer; transition: all 0.2s;
-  }
-  .lb-close:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
-  .lb-row {
-    display: grid; grid-template-columns: 2.5rem 1fr auto auto; align-items: center;
-    gap: 1rem; padding: 0.9rem 1rem; border-radius: 8px; margin-bottom: 0.5rem;
-    border: 1px solid var(--border); transition: background 0.2s;
-  }
-  .lb-row:hover { background: rgba(255,255,255,0.03); }
-  .lb-row.gold-row { border-color: var(--gold); background: rgba(245,200,66,0.06); }
-  .lb-row.silver-row { border-color: rgba(180,180,200,0.4); background: rgba(180,180,200,0.04); }
-  .lb-row.bronze-row { border-color: rgba(200,120,60,0.5); background: rgba(200,120,60,0.04); }
-  .lb-rank { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; text-align: center; color: var(--muted); }
-  .gold-row .lb-rank { color: var(--gold); }
-  .silver-row .lb-rank { color: #b4b4c8; }
-  .bronze-row .lb-rank { color: #c8783c; }
-  .lb-name { font-size: 0.9rem; font-weight: 600; letter-spacing: 0.03em; }
-  .lb-meta { font-size: 0.65rem; color: var(--muted); margin-top: 0.15rem; }
-  .lb-time { font-size: 0.72rem; color: var(--muted); text-align: right; }
-  .lb-score-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; text-align: right; min-width: 5rem; }
-  .gold-row .lb-score-val { color: var(--gold); }
-  .lb-empty { text-align: center; color: var(--muted); font-size: 0.8rem; padding: 3rem 0; letter-spacing: 0.05em; }
-  .lb-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 1.5rem; }
-  .lb-clear-btn {
-    background: transparent; color: var(--red); border: 1px solid rgba(255,71,87,0.3);
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; padding: 0.6rem;
-    border-radius: 6px; cursor: pointer; transition: all 0.2s;
-  }
-  .lb-clear-btn:hover { background: rgba(255,71,87,0.1); }
-  .lb-play-btn {
-    background: var(--gold); color: #0d0f14; border: none;
-    font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.08em;
-    padding: 0.6rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;
-  }
-  .lb-play-btn:hover { background: #ffd84d; }
+@media(max-width:520px){
+  .card{padding:28px 18px}
+  .title{font-size:26px}
+  .sc-title{font-size:19px}
+  .clock{font-size:22px}
+  .day-preview,.profile-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
-<!-- NAME ENTRY SCREEN -->
-<div id="name-screen">
-  <div class="name-box">
-    <div class="tag" style="margin-bottom:1rem;">▸ AGRANA NEXT LEVEL // Risk Simulator</div>
-    <h2>BEREIT?</h2>
-    <p>Trage deinen Namen ein und starte das Spiel.<br>Je schneller du entscheidest, desto mehr Punkte bekommst du.<br><span style="color:var(--gold)">Am Ende kannst du deinen Score per Google Form absenden.</span></p>
-    <input class="name-input" id="player-name" type="text" placeholder="Dein Name..." maxlength="24" autocomplete="off" />
-    <button class="name-start-btn" onclick="startGame()">Spiel starten →</button>
-    <button class="name-lb-btn" onclick="showLeaderboard(true)">🏆 Leaderboard ansehen</button>
-  </div>
-</div>
-
-<!-- READY SCREEN (shown between name entry and each round) -->
-<div id="ready-screen" class="hidden">
-  <div class="ready-box">
-    <div class="ready-round-label" id="ready-round-label">Runde 1 von 3</div>
-    <div class="ready-title">BEREIT?</div>
-    <div class="ready-player" id="ready-player"></div>
-    <div class="ready-hint">Lies das Szenario genau und wähle deine Strategie.<br>Du hast <strong>90 Sekunden</strong> – die Zeit läuft erst nach dem Klick!</div>
-    <button class="ready-btn" onclick="beginRound()">▸ Runde starten</button>
-  </div>
-</div>
-
-<!-- LEADERBOARD OVERLAY -->
-<div id="lb-overlay">
-  <div class="lb-box">
-    <div class="lb-header">
-      <div class="lb-title">🏆 Leaderboard</div>
-      <button class="lb-close" onclick="closeLeaderboard()">✕ Schließen</button>
-    </div>
-    <div id="lb-rows"></div>
-    <div class="lb-actions">
-      <button class="lb-clear-btn" onclick="clearLeaderboard()">⚠ Leaderboard löschen</button>
-      <button class="lb-play-btn" onclick="closeLeaderboard()">Spielen →</button>
-    </div>
-  </div>
-</div>
-
-<div class="wrapper">
-  <header>
-    <div class="tag">▸ AGRANA NEXT LEVEL // Risk Simulator</div>
-    <h1>RISK<span>MANAGER</span></h1>
-    <div class="subtitle">Treffe strategische Finanzierungsentscheidungen für AGRANA</div>
-  </header>
-
-  <div class="ticker">
-    <span class="ticker-item up">ZUCKER +2.3%</span>
-    <span class="ticker-item down">EURIBOR -0.4%</span>
-    <span class="ticker-item up">ENERGIE +5.1%</span>
-    <span class="ticker-item">USD/EUR 1.082</span>
-    <span class="ticker-item down">WEIZEN -1.2%</span>
-    <span class="ticker-item up">STÄRKE +0.8%</span>
-  </div>
-
-  <div class="rounds" id="rounds"></div>
-
-  <div class="timer-bar-wrap" id="timer-wrap">
-    <div class="timer-label">⏱ Zeit</div>
-    <div class="timer-track"><div class="timer-fill" id="timer-fill"></div></div>
-    <div class="timer-val" id="timer-val">60s</div>
-  </div>
-
-  <div class="scenario" id="scenario-box">
-    <div class="scenario-label">▸ Marktszenario</div>
-    <div class="scenario-text" id="scenario-text">Lade...</div>
-  </div>
-
-  <div class="meters" id="meters">
-    <div class="meter-card">
-      <div class="meter-label">Planungssicherheit</div>
-      <div class="meter-value" id="m-sicherheit" style="color: var(--blue)">50%</div>
-      <div class="meter-bar"><div class="meter-fill" id="mb-sicherheit" style="width:50%; background: var(--blue);"></div></div>
-    </div>
-    <div class="meter-card">
-      <div class="meter-label">Flexibilität</div>
-      <div class="meter-value" id="m-flex" style="color: var(--green)">50%</div>
-      <div class="meter-bar"><div class="meter-fill" id="mb-flex" style="width:50%; background: var(--green);"></div></div>
-    </div>
-    <div class="meter-card">
-      <div class="meter-label">Score</div>
-      <div class="meter-value" id="m-score" style="color: var(--gold)">0</div>
-      <div class="meter-bar"><div class="meter-fill" id="mb-score" style="width:0%; background: var(--gold);"></div></div>
-    </div>
-  </div>
-
-  <div class="choice-section">
-    <div class="choice-header">▸ Wähle deine Strategie</div>
-    <div class="choices" id="choices"></div>
-    <button class="confirm-btn" id="confirm-btn" onclick="confirmChoice()">Entscheidung bestätigen →</button>
-  </div>
-</div>
-
-<!-- RESULT OVERLAY -->
-<div class="result-overlay" id="result-overlay">
-  <div class="result-box" id="result-box">
-    <div class="result-title" id="result-title">Ergebnis</div>
-    <div class="result-subtitle" id="result-subtitle">Runde 1 von 3</div>
-    <div class="result-outcome" id="result-outcome"></div>
-    <div class="result-score" id="result-score-val"></div>
-    <div class="result-score-label">Punkte in dieser Runde</div>
-    <div class="result-btns">
-      <button class="btn-next" onclick="nextRound()">Nächste Runde →</button>
-      <button class="btn-retry" onclick="restartGame()">Neustart</button>
-    </div>
-  </div>
-</div>
+<div class="bg" id="bgLayer"></div>
+<div class="app" id="app"></div>
 
 <script>
-const FORM_CONFIG = {
-  GOOGLE_FORM_VIEW_URL: 'https://docs.google.com/forms/d/e/1FAIpQLScytt_sl201re9aw9SdYy3pgwOlYWQvBtruu5Za2_QRBr617g/viewform',
-  ENTRY_NAME: 'entry.164970651',
-  ENTRY_SCORE: 'entry.938886940',
-  ENTRY_AVG_TIME: 'entry.1339092323',
-  ENTRY_GRADE: ''
-};
+// ══════════════════════════════════════════════════════
+// DIMENSIONS & TYPES
+// ══════════════════════════════════════════════════════
+var DIMS={empathie:"Empathie",entscheidung:"Entscheidungskraft",kommunikation:"Kommunikation",struktur:"Struktur",mut:"Mut",reflexion:"Reflexion"};
 
-const ROUNDS = [
-  {
-    scenario: `Die EZB signalisiert <strong>drei weitere Zinserhöhungen</strong> bis Jahresende. AGRANA trägt ein Kreditvolumen von €450 Mio. zu variablen Konditionen. Das "NEXT LEVEL"-Investitionsprogramm läuft 5 Jahre. Gleichzeitig steigen Zuckerpreise um 8%.`,
-    choices: [
-      {
-        id: 'A', class: 'blue-card', title: 'Zinssicherung',
-        num: 'Option 1 — Absicherung gegen steigende Zinsen',
-        instruments: ['Interest Rate Swap (IRS)', 'Interest Rate Cap'],
-        pro: '+ Fixe Planungsbasis für 5 Jahre', con: '– Kein Upside bei fallenden Zinsen',
-        outcome: {
-          good: `Richtige Wahl! Die EZB erhöhte tatsächlich 3x. Dein IRS fixierte die Zinskosten auf 3,2% statt der neuen 4,8%. AGRANA spart <strong>€7,2 Mio.</strong> an Zinskosten.`,
-          bad: `Solide, aber suboptimal: Du ignorierst die Korrelation zwischen steigenden Zuckerpreisen (+8%) und Margen. Ein integriertes Instrument hätte mehr Wert geschaffen.`,
-          score: 80, sicherheit: +25, flex: -10,
-        }
-      },
-      {
-        id: 'B', class: 'gold-card', title: 'Cross-Risk',
-        num: 'Option 2 — Commodity-linked Instrumente',
-        instruments: ['Commodity-linked Loan', 'Commodity-linked Swap'],
-        pro: '+ Zinsen sinken wenn Rohstoffpreise fallen', con: '– Höhere Komplexität, weniger planbar',
-        outcome: {
-          good: `Brillant! Der Commodity-linked Swap koppelt Finanzierungskosten direkt an Zuckerpreise. Da Zucker +8% stieg, erhöhten sich zwar die Zinsen – aber vollständig durch die Marge gedeckt. <strong>Perfekte Korrelation!</strong>`,
-          bad: `Riskant. Mit steigenden Rohstoffpreisen stiegen auch eure Zinsen – die Marge glich es nicht vollständig aus. Netto-Belastung: €2,1 Mio.`,
-          score: 95, sicherheit: +10, flex: +20,
-        }
-      }
-    ],
-    bestChoice: 'B',
-  },
-  {
-    scenario: `Rezessionsangst: Zuckerpreis bricht um <strong>-15%</strong> ein, Energiepreise folgen (-10%). Die EZB dreht auf Senkungsmodus. AGRANA braucht kurzfristig €80 Mio. Liquidität für Lagerauffüllung.`,
-    choices: [
-      {
-        id: 'A', class: 'blue-card', title: 'Zinssicherung',
-        num: 'Option 1 — Rate Caps & Swaps',
-        instruments: ['Interest Rate Cap (erneuern)', 'Floor-Schutz via Swap'],
-        pro: '+ Schutz falls Zinsen wieder steigen', con: '– Kein Vorteil bei fallenden Rohstoffen',
-        outcome: {
-          good: `Defensiv, aber begrenzt. Der Cap schützte vor einem theoretischen Zinsanstieg, der nicht eintrat. Hedging-Kosten (Prämie: €0.9 Mio.) waren unnötig.`,
-          bad: `Fehlentscheidung. Zinsen sanken, Rohstoffpreise sanken – du hattest Zinsschutz aber keinen Margenschutz. Netto-Impact: -€3,4 Mio.`,
-          score: 30, sicherheit: +5, flex: -15,
-        }
-      },
-      {
-        id: 'B', class: 'gold-card', title: 'Cross-Risk',
-        num: 'Option 2 — Commodity-linked Instrumente',
-        instruments: ['Commodity-linked Loan (Zucker)', 'Energie-Swap'],
-        pro: '+ Sinkende Rohstoffe = sinkende Zinsen', con: '– Komplexere Buchhaltung nötig',
-        outcome: {
-          good: `Perfekt! Sinkende Zuckerpreise bedeuteten automatisch sinkende Finanzierungskosten. Zinssatz von 3.8% auf 2.1% reduziert. Das kompensiert den Margendruck fast vollständig. <strong>+€5.4 Mio. Nettoeffekt.</strong>`,
-          bad: `Gute Intuition, falsche Umsetzung. Der Energie-Swap war richtig, aber der Zucker-Link fehlte. Partial credit: +€1.8 Mio.`,
-          score: 100, sicherheit: +15, flex: +25,
-        }
-      }
-    ],
-    bestChoice: 'B',
-  },
-  {
-    scenario: `Stagflation-Schock: Zinsen <strong>explodieren auf 6%</strong>, gleichzeitig kollabieren Zuckerpreise auf historischen Tiefs (-22%). AGRANA steht vor dem schlimmsten beider Welten. Letzte Entscheidung!`,
-    choices: [
-      {
-        id: 'A', class: 'blue-card', title: 'Zinssicherung',
-        num: 'Option 1 — Maximale Zinssicherung',
-        instruments: ['IRS (gesamtes Portfolio)', 'Cap bei 4%'],
-        pro: '+ Fixiert Zinsen bei günstigem Level', con: '– Sinkende Rohstoffpreise unberücksichtigt',
-        outcome: {
-          good: `Gute Reaktion! Du fixiertest das Zinsrisiko vor dem Anstieg auf 6%. Einsparung: <strong>€12.6 Mio.</strong> Rohstoffdruck bleibt, aber die Finanzierungsseite ist gerettet.`,
-          bad: `Zu spät. Teile des Portfolios tragen jetzt 6%-Zinsen. Schaden: €4.2 Mio.`,
-          score: 75, sicherheit: +30, flex: -20,
-        }
-      },
-      {
-        id: 'B', class: 'gold-card', title: 'Hybridlösung',
-        num: 'Option 2 — IRS + Commodity-Link kombiniert',
-        instruments: ['IRS (70% des Volumens)', 'Commodity-linked Swap (30%)'],
-        pro: '+ Zinsfixierung + Margenpuffer kombiniert', con: '– Komplexe Steuerung nötig',
-        outcome: {
-          good: `Meisterhaft! Die 70/30-Kombination deckt beide Risiken ab. IRS fixiert Hauptzinslast, der Commodity-Swap senkt automatisch bei fallendem Zucker. Gesamteffekt: <strong>+€15.8 Mio.</strong>`,
-          bad: `Guter Ansatz, Timing zu langsam. Hybridsicherung kam nach dem Peak. Trotzdem: +€6.1 Mio. Netto.`,
-          score: 100, sicherheit: +20, flex: +15,
-        }
-      }
-    ],
-    bestChoice: 'B',
-  }
+var TYPES=[
+  {name:"Empathische/r Teambuilder/in",desc:"Du f\u00fchrst \u00fcber Beziehung und Vertrauen. Menschen sp\u00fcren, dass du sie siehst. Achte darauf, auch dann klar zu sein, wenn es unbequem wird.",primary:"empathie"},
+  {name:"Klare/r Entscheider/in",desc:"Du triffst Entscheidungen schnell und gibst Orientierung. Dein Team wei\u00df, woran es ist. Vergiss nicht, auch zuzuh\u00f6ren, bevor du handelst.",primary:"entscheidung"},
+  {name:"Strategische/r Gestalter/in",desc:"Du denkst in Strukturen und Systemen. Ordnung gibt dir Sicherheit. Lass Raum f\u00fcr das Ungeplante \u2013 dort liegen oft die besten Ideen.",primary:"struktur"},
+  {name:"Mutige/r Impulsgeber/in",desc:"Du scheust dich nicht vor schwierigen Themen. Dein Team braucht diese Klarheit. Achte darauf, anderen Zeit zum Verdauen zu geben.",primary:"mut"},
+  {name:"Offene/r Kommunikator/in",desc:"Du schaffst Dialoge und gibst Raum f\u00fcr alle Stimmen. Menschen f\u00fchlen sich geh\u00f6rt. Achte darauf, am Ende auch Entscheidungen zu treffen.",primary:"kommunikation"},
+  {name:"Reflektierte/r Navigator/in",desc:"Du denkst nach, bevor du handelst. Deine Entscheidungen sind durchdacht. Manchmal braucht F\u00fchrung aber auch den mutigen Sprung.",primary:"reflexion"},
 ];
 
-// ── State ──────────────────────────────────────────────
-let currentRound = 0, selectedChoice = null;
-let totalScore = 0, sicherheit = 50, flex = 50;
-let playerName = '';
-let gameStartTime = 0, roundStartTime = 0;
-let totalTimePenalty = 0;   // seconds used across all rounds
-let timerInterval = null;
-const ROUND_TIME = 90;       // seconds per round
+// ══════════════════════════════════════════════════════
+// SCENARIOS \u2013 NEW LEADERS
+// ══════════════════════════════════════════════════════
+var SC_NEW=[
+  {
+    time:"08:00",icon:"\u2615",tag:"Der Auftakt",title:"Jemand wartet schon",
+    text:"Dein allererster Morgen als Teamleitung. Du kommst ins B\u00fcro \u2013 und ein Teammitglied steht bereits vor deiner T\u00fcr. Es wirkt nerv\u00f6s und m\u00f6chte dringend etwas besprechen. Dein Kalender ist leer, aber du bist selbst noch nicht angekommen.",
+    options:[
+      {text:"Du bittest die Person herein und h\u00f6rst zu \u2013 der Mensch geht vor.",consequence:"Die Person f\u00fchlt sich ernst genommen. Du startest nah am Team.",trait:"Menschenn\u00e4he",dims:{empathie:3,kommunikation:2,struktur:0,mut:1,entscheidung:0,reflexion:1}},
+      {text:"Du bittest um 15 Minuten, um anzukommen \u2013 und kommst dann vorbereitet ins Gespr\u00e4ch.",consequence:"Du setzt fr\u00fch einen klaren Rahmen. Das Gespr\u00e4ch danach ist fokussierter.",trait:"Selbststeuerung",dims:{empathie:1,kommunikation:1,struktur:3,mut:0,entscheidung:1,reflexion:2}},
+    ]
+  },
+  {
+    time:"08:45",icon:"\uD83D\uDCF1",tag:"Das erste Signal",title:"Dringend \u2013 oder doch nicht?",
+    text:"Im Chat poppt eine Nachricht auf: \u203AKann ich dich kurz anrufen? Ist wirklich dringend.\u2039 Gleichzeitig beginnt in 15 Minuten dein Antrittsmeeting \u2013 und du hast die Agenda noch nicht fertig.",
+    options:[
+      {text:"Du rufst sofort zur\u00fcck \u2013 wenn jemand dringend sagt, nimmst du das ernst.",consequence:"Du reagierst schnell. Aber das Meeting startet ohne klare Agenda.",trait:"Reaktionsst\u00e4rke",dims:{empathie:3,kommunikation:2,struktur:0,mut:1,entscheidung:1,reflexion:0}},
+      {text:"Du schreibst zur\u00fcck: Bin gleich im Meeting, danach melde ich mich. Und bereitest dich vor.",consequence:"Du zeigst dem ganzen Team Professionalit\u00e4t. Das Telefonat kl\u00e4rst du sp\u00e4ter in Ruhe.",trait:"Fokussierung",dims:{empathie:1,kommunikation:1,struktur:3,mut:0,entscheidung:2,reflexion:1}},
+    ]
+  },
+  {
+    time:"09:00",icon:"\uD83C\uDFA4",tag:"Dein Auftritt",title:"Alle Augen auf dich",
+    text:"Das Antrittsmeeting. Acht Gesichter schauen dich an. Manche neugierig, manche skeptisch. Du sp\u00fcrst: Das Team will wissen, wer du bist und was sich jetzt \u00e4ndert.",
+    options:[
+      {text:"Du legst offen dar, welche Werte dir wichtig sind und was du vom Team erwartest.",consequence:"Klare Ansage. Das Team wei\u00df, woran es ist. Manche finden das erfrischend \u2013 andere sind noch zur\u00fcckhaltend.",trait:"Klarheit",dims:{empathie:0,kommunikation:2,struktur:2,mut:3,entscheidung:2,reflexion:0}},
+      {text:"Du fragst das Team: Was l\u00e4uft gut? Was w\u00fcnscht ihr euch von mir? Du h\u00f6rst erst mal zu.",consequence:"Das Team f\u00fchlt sich einbezogen. Du sammelst wertvolle Informationen, bevor du Entscheidungen triffst.",trait:"Zuh\u00f6rkultur",dims:{empathie:3,kommunikation:2,struktur:0,mut:1,entscheidung:0,reflexion:3}},
+    ]
+  },
+  {
+    time:"09:50",icon:"\uD83D\uDD25",tag:"Die Ger\u00fcchtek\u00fcche",title:"Zwischen den Zeilen",
+    text:"Nach dem Meeting kommt jemand zu dir und erz\u00e4hlt leise: Zwei Kolleg:innen reden seit Wochen nicht mehr miteinander. Es belaste das ganze Klima. Die Person bittet dich, etwas zu tun \u2013 aber bitte diskret.",
+    options:[
+      {text:"Du bedankst dich f\u00fcr die Offenheit und k\u00fcndigst an, das Thema behutsam aufzugreifen.",consequence:"Du zeigst Mut, dich einem unangenehmen Thema zu stellen \u2013 ohne \u00fcber K\u00f6pfe hinweg zu handeln.",trait:"Konfliktkompetenz",dims:{empathie:2,kommunikation:2,struktur:1,mut:3,entscheidung:1,reflexion:1}},
+      {text:"Du h\u00f6rst aufmerksam zu, m\u00f6chtest dir aber erst selbst ein Bild machen, bevor du eingreifst.",consequence:"Du vermeidest vorschnelles Handeln auf Basis einer einzelnen Perspektive. Beobachtung vor Intervention.",trait:"Beobachtungsst\u00e4rke",dims:{empathie:1,kommunikation:1,struktur:2,mut:1,entscheidung:1,reflexion:3}},
+    ]
+  },
+  {
+    time:"10:30",icon:"\uD83D\uDCE7",tag:"Post von oben",title:"Die unm\u00f6gliche Deadline",
+    text:"Dein Chef schickt eine Mail: Er braucht bis morgen fr\u00fch eine Einsch\u00e4tzung zur Performance des Teams. Du bist seit drei Stunden im Amt und kennst die Leute kaum.",
+    options:[
+      {text:"Du antwortest ehrlich: F\u00fcr eine fundierte Einsch\u00e4tzung brauchst du mehr Zeit \u2013 und bietest einen Alternativtermin an.",consequence:"Du setzt eine professionelle Grenze. Dein Chef wei\u00df jetzt: Du lieferst lieber sp\u00e4ter als oberfl\u00e4chlich.",trait:"Haltung zeigen",dims:{empathie:0,kommunikation:2,struktur:2,mut:3,entscheidung:2,reflexion:1}},
+      {text:"Du fragst schnell im Team nach ersten Eindr\u00fccken und lieferst eine vorl\u00e4ufige Einsch\u00e4tzung.",consequence:"Du lieferst schnell \u2013 allerdings auf d\u00fcnner Basis. Dein Chef hat seine Antwort, aber du gehst ein Risiko ein.",trait:"Handlungsgeschwindigkeit",dims:{empathie:1,kommunikation:1,struktur:0,mut:1,entscheidung:3,reflexion:0}},
+    ]
+  },
+  {
+    time:"11:15",icon:"\uD83E\uDD14",tag:"Die stille Person",title:"Wer nicht spricht, f\u00e4llt auf",
+    text:"Dir ist aufgefallen: Eine Person hat im Meeting kein einziges Wort gesagt. Jetzt sitzt sie allein am Platz, Kopfh\u00f6rer auf, Blick auf den Bildschirm. Vielleicht introvertiert. Vielleicht ist etwas anderes los.",
+    options:[
+      {text:"Du gehst kurz vorbei und fragst beil\u00e4ufig, wie es ihr geht \u2013 ohne Druck, ohne gro\u00dfes Gespr\u00e4ch.",consequence:"Eine kleine Geste mit gro\u00dfer Wirkung. Du zeigst: Ich sehe dich, auch wenn du leise bist.",trait:"Aufmerksamkeit",dims:{empathie:3,kommunikation:2,struktur:0,mut:1,entscheidung:0,reflexion:2}},
+      {text:"Du notierst es dir und beobachtest in den n\u00e4chsten Tagen, ob sich ein Muster zeigt.",consequence:"Du handelst nicht vorschnell. Manche Menschen brauchen Zeit \u2013 besonders bei neuer F\u00fchrung.",trait:"Geduld",dims:{empathie:1,kommunikation:0,struktur:2,mut:0,entscheidung:1,reflexion:3}},
+    ]
+  },
+  {
+    time:"12:00",icon:"\uD83C\uDF5D",tag:"Mittagspause",title:"Essen mit dem Team?",
+    text:"Dein Team geht gemeinsam zum Mittagessen. Du wirst eingeladen. Es ist deine einzige Pause heute \u2013 und du sp\u00fcrst, dass dir der Kopf raucht. Gleichzeitig w\u00e4re es eine Chance, das Team pers\u00f6nlicher kennenzulernen.",
+    options:[
+      {text:"Du gehst mit. Die informellen Momente sind oft die wichtigsten.",consequence:"Am Tisch erf\u00e4hrst du mehr \u00fcber das Team als in jedem Meeting. Vertrauen entsteht auch beim Essen.",trait:"Teamgeist",dims:{empathie:3,kommunikation:2,struktur:0,mut:0,entscheidung:0,reflexion:1}},
+      {text:"Du nimmst dir die Pause bewusst allein, um den Vormittag zu verarbeiten.",consequence:"Du tankst Energie und reflektierst. Der Nachmittag wird klarer \u2013 aber dem Team entgeht ein Signal.",trait:"Selbstf\u00fcrsorge",dims:{empathie:0,kommunikation:0,struktur:2,mut:0,entscheidung:1,reflexion:3}},
+    ]
+  },
+  {
+    time:"13:30",icon:"\u26A1",tag:"Spannungsfeld",title:"Zwei Meinungen, ein Raum",
+    text:"In einer Besprechung schl\u00e4gt jemand eine Prozess\u00e4nderung vor. Eine andere Person widerspricht sofort \u2013 laut und deutlich. Stille im Raum. Alle schauen zu dir.",
+    options:[
+      {text:"Du moderierst: Beide Perspektiven sind berechtigt. Ihr sammelt Argumente und entscheidet gemeinsam.",consequence:"Du schaffst Raum f\u00fcr Austausch, ohne Partei zu ergreifen. Das Team lernt: Unterschiedliche Meinungen sind erw\u00fcnscht.",trait:"Moderationsst\u00e4rke",dims:{empathie:2,kommunikation:3,struktur:1,mut:1,entscheidung:0,reflexion:2}},
+      {text:"Du triffst eine schnelle Entscheidung, um die Diskussion aufzul\u00f6sen und das Meeting nicht zu sprengen.",consequence:"Schnell gel\u00f6st. Aber eine Seite f\u00fchlt sich \u00fcbergangen. Effizienz hat manchmal ihren Preis.",trait:"Durchsetzungsst\u00e4rke",dims:{empathie:0,kommunikation:1,struktur:2,mut:2,entscheidung:3,reflexion:0}},
+    ]
+  },
+  {
+    time:"15:00",icon:"\uD83D\uDCA8",tag:"\u00dcberlastung",title:"Wenn alles zu viel wird",
+    text:"Ein Teammitglied kommt zu dir und sagt offen: Es schafft gerade nicht alles. Die Aufgabenliste ist zu lang, die Deadlines unrealistisch. Diese Person vertraut dir genug, um ehrlich zu sein.",
+    options:[
+      {text:"Du setzt dich hin und priorisierst gemeinsam: Was ist wirklich wichtig? Was kann warten?",consequence:"Du zeigst: F\u00fchrung hei\u00dft nicht nur Aufgaben verteilen, sondern auch Last nehmen. Die Person atmet auf.",trait:"Priorisierungsst\u00e4rke",dims:{empathie:2,kommunikation:2,struktur:3,mut:1,entscheidung:2,reflexion:1}},
+      {text:"Du \u00fcbernimmst eine konkrete Aufgabe selbst und sagst: Den Rest kl\u00e4ren wir morgen in Ruhe.",consequence:"Schnelle Entlastung. Aber langfristig musst du aufpassen, nicht selbst zum Engpass zu werden.",trait:"Hands-on-Mentalit\u00e4t",dims:{empathie:2,kommunikation:1,struktur:0,mut:1,entscheidung:2,reflexion:0}},
+    ]
+  },
+  {
+    time:"16:45",icon:"\uD83C\uDF05",tag:"Feierabend",title:"Der letzte Moment",
+    text:"Der Tag ist fast vorbei. Es war intensiv: Gespr\u00e4che, Spannungen, Entscheidungen, neue Gesichter. Du hast noch f\u00fcnf Minuten, bevor du gehst.",
+    options:[
+      {text:"Du schreibst deinem Team eine kurze Nachricht: Danke f\u00fcr den guten ersten Tag. Ich freue mich auf morgen.",consequence:"Eine kleine Geste zum Schluss. Das Team sp\u00fcrt: Diese Person ist nah. Morgen startet ihr mit R\u00fcckenwind.",trait:"Verbundenheit",dims:{empathie:3,kommunikation:2,struktur:0,mut:0,entscheidung:0,reflexion:1}},
+      {text:"Du schreibst dir drei Dinge auf, die du morgen anders oder besser machen willst.",consequence:"Du investierst in deine eigene Entwicklung. F\u00fchrung beginnt bei der ehrlichen Reflexion.",trait:"Selbstentwicklung",dims:{empathie:0,kommunikation:0,struktur:2,mut:1,entscheidung:0,reflexion:3}},
+    ]
+  },
+];
 
-// ── Name screen ────────────────────────────────────────
-document.getElementById('player-name').addEventListener('keydown', e => {
-  if (e.key === 'Enter') startGame();
-});
+// ══════════════════════════════════════════════════════
+// SCENARIOS \u2013 EXPERIENCED LEADERS
+// ══════════════════════════════════════════════════════
+var SC_EXP=[
+  {
+    time:"08:00",icon:"\u2615",tag:"Die Routine",title:"Etwas stimmt nicht",
+    text:"Du startest den Tag wie immer. Doch heute f\u00e4llt dir auf: Im Daily seufzt jemand h\u00f6rbar, eine andere Person wirkt abwesend. Die Stimmung ist anders als sonst \u2013 und du sp\u00fcrst, dass es nicht nur ein schlechter Morgen ist.",
+    options:[
+      {text:"Du sprichst es offen an: Mir f\u00e4llt auf, dass die Energie heute anders ist. Was ist los?",consequence:"Mutig und direkt. Du gibst dem Team die Erlaubnis, ehrlich zu sein. Manche \u00f6ffnen sich \u2013 manche brauchen noch Zeit.",trait:"Sp\u00fcrbarkeit",dims:{empathie:3,kommunikation:2,struktur:0,mut:2,entscheidung:0,reflexion:1}},
+      {text:"Du beobachtest aufmerksam und nimmst dir vor, im Laufe des Tages einzeln nachzufragen.",consequence:"Du gibst dir selbst und dem Team Raum. Nicht alles muss sofort adressiert werden.",trait:"Gelassenheit",dims:{empathie:1,kommunikation:1,struktur:2,mut:0,entscheidung:1,reflexion:3}},
+    ]
+  },
+  {
+    time:"08:45",icon:"\uD83E\uDE9E",tag:"Der Spiegel",title:"R\u00fcckmeldung, die trifft",
+    text:"Ein langj\u00e4hriges Teammitglied sagt dir im Gespr\u00e4ch: Ich habe das Gef\u00fchl, du h\u00f6rst mir in letzter Zeit nicht mehr richtig zu. Der Satz trifft dich \u2013 weil er stimmen k\u00f6nnte.",
+    options:[
+      {text:"Du h\u00e4ltst inne und fragst: Kannst du mir ein konkretes Beispiel nennen? Ich nehme das ernst.",consequence:"Du zeigst: Auch als erfahrene F\u00fchrungskraft bist du bereit, dich hinterfragen zu lassen. Das st\u00e4rkt die Beziehung.",trait:"Selbstkritik",dims:{empathie:2,kommunikation:2,struktur:0,mut:2,entscheidung:0,reflexion:3}},
+      {text:"Du erkl\u00e4rst den Kontext \u2013 die letzten Wochen waren dicht \u2013 und bittest um konkrete Situationen, um es besser zu machen.",consequence:"Du bist transparent und l\u00f6sungsorientiert. Das zeigt Professionalit\u00e4t, auch wenn es unbequem ist.",trait:"Transparenz",dims:{empathie:1,kommunikation:3,struktur:2,mut:1,entscheidung:1,reflexion:1}},
+    ]
+  },
+  {
+    time:"09:00",icon:"\uD83D\uDCA1",tag:"Frischer Wind",title:"Die neue Idee",
+    text:"Eine neue Kollegin hinterfragt einen Prozess, den du vor Jahren selbst eingef\u00fchrt hast. Ihr Vorschlag ist radikal anders \u2013 und er k\u00f6nnte tats\u00e4chlich besser funktionieren. Einige im Team schauen zu dir.",
+    options:[
+      {text:"Du sagst: Guter Punkt. Lass uns das ausprobieren und danach gemeinsam auswerten.",consequence:"Du zeigst: Erfahrung hei\u00dft nicht, an allem festzuhalten. Das Team sieht eine F\u00fchrungskraft, die offen bleibt.",trait:"Erneuerungsf\u00e4higkeit",dims:{empathie:1,kommunikation:2,struktur:0,mut:3,entscheidung:2,reflexion:1}},
+      {text:"Du erkl\u00e4rst den Hintergrund deiner damaligen Entscheidung \u2013 und schl\u00e4gst vor, beide Ans\u00e4tze zu vergleichen.",consequence:"Du gibst Kontext, ohne abzublocken. Beide Perspektiven bekommen Raum.",trait:"Einordnung",dims:{empathie:1,kommunikation:2,struktur:3,mut:1,entscheidung:1,reflexion:2}},
+    ]
+  },
+  {
+    time:"09:50",icon:"\uD83D\uDE36\u200D\uD83C\uDF2B\uFE0F",tag:"Der blinde Fleck",title:"Nicht bemerkt",
+    text:"Du erf\u00e4hrst zuf\u00e4llig, dass zwei langj\u00e4hrige Teammitglieder seit Wochen ein Problem miteinander haben. Dir ist nichts aufgefallen. Das irritiert dich \u2013 denn normalerweise hast du ein gutes Gesp\u00fcr.",
+    options:[
+      {text:"Du reflektierst ehrlich, warum du es nicht bemerkt hast \u2013 und suchst dann aktiv das Gespr\u00e4ch mit beiden.",consequence:"Ehrliche Selbstreflexion plus Handlung. Du zeigst: Auch erfahrene F\u00fchrungskr\u00e4fte haben blinde Flecken \u2013 entscheidend ist, was man daraus macht.",trait:"Lernbereitschaft",dims:{empathie:2,kommunikation:1,struktur:0,mut:2,entscheidung:1,reflexion:3}},
+      {text:"Du reagierst sofort und l\u00e4dst beide zum Gespr\u00e4ch ein. Die Ursachenforschung kommt sp\u00e4ter.",consequence:"Du greifst schnell ein. Manchmal ist Z\u00fcgigkeit wichtiger als perfekte Vorbereitung.",trait:"Handlungsf\u00e4higkeit",dims:{empathie:1,kommunikation:2,struktur:1,mut:2,entscheidung:3,reflexion:0}},
+    ]
+  },
+  {
+    time:"10:30",icon:"\uD83D\uDCE9",tag:"Von oben herab",title:"Umsetzen, was man nicht tr\u00e4gt",
+    text:"Dein Chef bittet dich, eine Umstrukturierung umzusetzen, die du f\u00fcr falsch h\u00e4ltst. Du kennst dein Team gut genug, um zu wissen: Das wird Widerstand ausl\u00f6sen \u2013 und m\u00f6glicherweise gute Leute kosten.",
+    options:[
+      {text:"Du sprichst deine Bedenken offen gegen\u00fcber deinem Chef aus und argumentierst f\u00fcr eine Alternative.",consequence:"Du nutzt deine Erfahrung, um nach oben Einfluss zu nehmen. Das ist unbequem \u2013 aber genau das macht reife F\u00fchrung aus.",trait:"R\u00fcckgrat",dims:{empathie:1,kommunikation:2,struktur:1,mut:3,entscheidung:2,reflexion:1}},
+      {text:"Du setzt die Entscheidung um, gestaltest aber den Prozess so, dass dein Team m\u00f6glichst wenig belastet wird.",consequence:"Du sch\u00fctzt dein Team, ohne den Rahmen zu sprengen. Pragmatisch und empathisch.",trait:"Schutzinstinkt",dims:{empathie:3,kommunikation:1,struktur:2,mut:0,entscheidung:1,reflexion:1}},
+    ]
+  },
+  {
+    time:"11:15",icon:"\uD83E\uDEA4",tag:"Stagnation",title:"Der ehrliche Moment",
+    text:"Ein Mitarbeiter, den du seit Jahren f\u00f6rderst, sagt dir offen: Ich habe das Gef\u00fchl, ich entwickle mich hier nicht mehr weiter. Du wei\u00dft: Er hat recht. Aber sein Weggang w\u00fcrde eine L\u00fccke rei\u00dfen.",
+    options:[
+      {text:"Du nimmst es ernst und entwickelst gemeinsam neue Perspektiven \u2013 auch wenn das bedeuten k\u00f6nnte, dass die Person geht.",consequence:"Du stellst die Entwicklung der Person \u00fcber deine eigene Bequemlichkeit. Das ist gro\u00dfz\u00fcgige F\u00fchrung.",trait:"F\u00f6rderkultur",dims:{empathie:3,kommunikation:1,struktur:0,mut:2,entscheidung:1,reflexion:2}},
+      {text:"Du zeigst auf, welche Entwicklung bereits stattgefunden hat \u2013 und fragst: Was genau m\u00fcsste sich \u00e4ndern?",consequence:"Du gibst Wertsch\u00e4tzung f\u00fcr den Weg und \u00f6ffnest ein konkretes Gespr\u00e4ch. Keine schnelle L\u00f6sung, aber ein ehrlicher Dialog.",trait:"Wertsch\u00e4tzung",dims:{empathie:2,kommunikation:3,struktur:1,mut:0,entscheidung:0,reflexion:2}},
+    ]
+  },
+  {
+    time:"12:00",icon:"\uD83C\uDF5D",tag:"Flurfunk",title:"Was das Team wirklich denkt",
+    text:"Beim Mittagessen erz\u00e4hlt dir jemand aus einer anderen Abteilung: Dein Team hat einen sehr guten Ruf \u2013 aber manche empfinden bestimmte Entscheidungen als wenig transparent.",
+    options:[
+      {text:"Du nimmst das ernst und \u00fcberlegst, wo du k\u00fcnftig mehr Beteiligung erm\u00f6glichen kannst.",consequence:"Du nutzt externes Feedback als Wachstumsimpuls. Das zeugt von Reife und Offenheit.",trait:"Demut",dims:{empathie:2,kommunikation:1,struktur:1,mut:1,entscheidung:0,reflexion:3}},
+      {text:"Du fragst nach konkreten Beispielen, bevor du etwas \u00e4nderst \u2013 nicht jedes Feedback muss sofort Konsequenzen haben.",consequence:"Du bleibst besonnen und differenziert. Nicht jede R\u00fcckmeldung erfordert sofortiges Handeln.",trait:"Differenzierung",dims:{empathie:1,kommunikation:2,struktur:3,mut:0,entscheidung:2,reflexion:1}},
+    ]
+  },
+  {
+    time:"13:30",icon:"\u23F3",tag:"Das aufgeschobene Gespr\u00e4ch",title:"Was du l\u00e4ngst wei\u00dft",
+    text:"Du wei\u00dft seit Wochen: Ein Teammitglied liefert nicht mehr die gewohnte Qualit\u00e4t. Du hast das Gespr\u00e4ch bisher vermieden, weil ihr euch gut versteht. Heute merkst du: Es ist Zeit.",
+    options:[
+      {text:"Du f\u00fchrst das Gespr\u00e4ch heute \u2013 klar, sachlich und wertsch\u00e4tzend. Keine Vorw\u00fcrfe, aber auch keine Ausfl\u00fcchte.",consequence:"Du \u00fcberwindest die Vermeidung. Und du zeigst: Auch bei guter Beziehung braucht F\u00fchrung Klarheit.",trait:"Konsequenz",dims:{empathie:1,kommunikation:2,struktur:1,mut:3,entscheidung:2,reflexion:1}},
+      {text:"Du bereitest dich gr\u00fcndlich vor: Fakten, Beispiele, Gespr\u00e4chsleitfaden \u2013 und terminierst das Gespr\u00e4ch f\u00fcr morgen fr\u00fch.",consequence:"Durchdacht und strukturiert. Die Vorbereitung gibt dir Sicherheit \u2013 solange Morgen nicht zum n\u00e4chsten Aufschub wird.",trait:"Sorgfalt",dims:{empathie:1,kommunikation:1,struktur:3,mut:1,entscheidung:1,reflexion:2}},
+    ]
+  },
+  {
+    time:"15:00",icon:"\uD83D\uDE80",tag:"Generationenfrage",title:"Andere Zeiten, andere Regeln?",
+    text:"Ein j\u00fcngeres Teammitglied schl\u00e4gt vor, Meetings radikal zu k\u00fcrzen und mehr asynchron zu arbeiten. Einige im Team sind begeistert, andere skeptisch. Du merkst: Dein erster Impuls ist Widerstand.",
+    options:[
+      {text:"Du schl\u00e4gst einen zweiwöchigen Testlauf vor. Danach wertet ihr gemeinsam aus, was funktioniert hat.",consequence:"Du verbindest Offenheit mit Struktur. Das Team sieht: Erfahrung und Innovation schlie\u00dfen sich nicht aus.",trait:"Anpassungsf\u00e4higkeit",dims:{empathie:1,kommunikation:2,struktur:2,mut:2,entscheidung:2,reflexion:1}},
+      {text:"Du moderierst eine offene Diskussion, in der alle ihre Perspektive einbringen \u2013 und h\u00f6rst bewusst auf die leisen Stimmen.",consequence:"Du gibst allen Raum \u2013 und vermeidest, dass Lautst\u00e4rke \u00fcber Richtung entscheidet.",trait:"Inklusives F\u00fchren",dims:{empathie:3,kommunikation:3,struktur:0,mut:0,entscheidung:0,reflexion:2}},
+    ]
+  },
+  {
+    time:"16:45",icon:"\uD83C\uDF05",tag:"R\u00fcckblick",title:"Gewohnheit oder Entscheidung?",
+    text:"Ende des Tages. Du denkst \u00fcber deine F\u00fchrungsroutinen nach. Was davon ist bewusste Entscheidung \u2013 und was ist Gewohnheit, die du nie hinterfragt hast?",
+    options:[
+      {text:"Du nimmst dir vor, morgen eine Sache bewusst anders zu machen \u2013 als Experiment an dir selbst.",consequence:"Du bleibst in Bewegung. Auch nach Jahren in F\u00fchrung ist Selbstentwicklung kein Zeichen von Schw\u00e4che, sondern von St\u00e4rke.",trait:"Experimentierfreude",dims:{empathie:0,kommunikation:0,struktur:1,mut:3,entscheidung:1,reflexion:3}},
+      {text:"Du schreibst dir auf, welche drei Dinge heute gut funktioniert haben \u2013 und baust bewusst darauf auf.",consequence:"Du st\u00e4rkst, was funktioniert. Nicht alles muss ver\u00e4ndert werden \u2013 manchmal ist Festigen genauso wertvoll.",trait:"Stabilit\u00e4t",dims:{empathie:1,kommunikation:0,struktur:3,mut:0,entscheidung:2,reflexion:2}},
+    ]
+  },
+];
 
-function startGame() {
-  const name = document.getElementById('player-name').value.trim();
-  if (!name) { document.getElementById('player-name').focus(); return; }
-  playerName = name;
-  document.getElementById('name-screen').classList.add('hidden');
-  gameStartTime = Date.now();
-  // Reset state
-  currentRound = 0; selectedChoice = null;
-  totalScore = 0; sicherheit = 50; flex = 50;
-  totalTimePenalty = 0;
-  updateMeters();
-  showReadyScreen();
-}
+// ══════════════════════════════════════════════════════
+// PROFILE CONFIG
+// ══════════════════════════════════════════════════════
+var PROFILE_CFG = {
+  "new": {
+    badge: "\uD83C\uDF31 Neuer Anfang",
+    title: "Dein erster Tag",
+    subtitle: "Du bist ab heute Teamleitung. Zehn Situationen. Deine Entscheidungen. Dein F\u00fchrungsprofil.",
+    kursText: "Du hast in den Videos typische F\u00fchrungssituationen und konkrete Handlungsstrategien kennengelernt. Jetzt geht es um <strong>dich</strong>: Wie reagierst du selbst, wenn es darauf ankommt? Es gibt kein Richtig oder Falsch \u2013 nur deinen pers\u00f6nlichen Stil.",
+    resultTitle: "Dein F\u00fchrungskompass",
+    resultSubtitle: "Dein erster Tag ist geschafft. So hast du gef\u00fchrt:",
+    reflections: [
+      "\u203AIn welcher Situation hast du am l\u00e4ngsten \u00fcberlegt \u2013 und warum?\u2039",
+      "\u203AWelche Entscheidung w\u00fcrdest du beim n\u00e4chsten Mal anders treffen?\u2039",
+      "\u203AWas hat dich \u00fcber deinen eigenen F\u00fchrungsstil \u00fcberrascht?\u2039",
+    ],
+    workshopText: "Nimm deinen F\u00fchrungskompass mit in den <strong>Pr\u00e4senz-Workshop</strong>. Dort \u00fcbst du genau die Situationen, die dir heute schwergefallen sind \u2013 mit echtem Feedback und Rollenspiel.",
+    scenarios: SC_NEW,
+  },
+  "exp": {
+    badge: "\uD83C\uDFC6 Erfahrung z\u00e4hlt",
+    title: "Ein ganz normaler Tag?",
+    subtitle: "Du f\u00fchrst seit Jahren. Aber manche Tage stellen alles infrage. Heute ist so ein Tag.",
+    kursText: "Die Videos haben zentrale F\u00fchrungssituationen kompakt auf den Punkt gebracht. Jetzt geht es um <strong>deine Muster</strong>: Wo handelst du aus Erfahrung \u2013 und wo vielleicht aus Gewohnheit? Dieses Spiel ist kein Test, sondern ein Spiegel.",
+    resultTitle: "Dein F\u00fchrungskompass",
+    resultSubtitle: "Dein Tag ist vorbei. Das sind deine Muster:",
+    reflections: [
+      "\u203AIn welcher Situation hast du ein Muster erkannt, das du unbewusst immer wiederholst?\u2039",
+      "\u203AWo hat dich deine Erfahrung heute eher gebremst als geholfen?\u2039",
+      "\u203AWelche F\u00fchrungsgewohnheit m\u00f6chtest du im Workshop bewusst hinterfragen?\u2039",
+    ],
+    workshopText: "Nimm deinen Kompass mit in den <strong>Pr\u00e4senz-Workshop</strong>. Dort reflektierst du mit anderen erfahrenen F\u00fchrungskr\u00e4ften \u2013 und bekommst ehrliches Feedback zu deinen blinden Flecken.",
+    scenarios: SC_EXP,
+  },
+};
 
-function showReadyScreen() {
-  stopTimer();
-  document.getElementById('ready-round-label').textContent = `Runde ${currentRound + 1} von ${ROUNDS.length}`;
-  document.getElementById('ready-player').textContent = `▸ Spieler: ${playerName}`;
-  document.getElementById('ready-screen').classList.remove('hidden');
-}
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+var S={phase:"intro",profile:null,si:0,chosen:null,showResult:false,scores:{empathie:0,entscheidung:0,kommunikation:0,struktur:0,mut:0,reflexion:0},xp:0,xpFloat:false,traits:[]};
+function up(o){Object.assign(S,o);render()}
 
-function beginRound() {
-  document.getElementById('ready-screen').classList.add('hidden');
-  renderRound();
-}
-
-// ── Game ───────────────────────────────────────────────
-function initGame() {
-  currentRound = 0; selectedChoice = null;
-  totalScore = 0; sicherheit = 50; flex = 50;
-  totalTimePenalty = 0;
-  updateMeters();
-}
-
-function renderRound() {
-  const rd = ROUNDS[currentRound];
-  document.getElementById('rounds').innerHTML = ROUNDS.map((_, i) =>
-    `<div class="round-dot ${i < currentRound ? 'done' : i === currentRound ? 'active' : ''}"></div>`
-  ).join('');
-  document.getElementById('scenario-text').innerHTML = rd.scenario;
-
-  const choicesEl = document.getElementById('choices');
-  choicesEl.innerHTML = rd.choices.map(c => `
-    <div class="choice-card ${c.class}" id="card-${c.id}" onclick="selectChoice('${c.id}')">
-      <div class="choice-num">${c.num}</div>
-      <div class="choice-title">${c.title}</div>
-      <div class="choice-instruments">${c.instruments.map(i => `<div class="instrument">▸ ${i}</div>`).join('')}</div>
-      <div class="choice-pros-cons">
-        <div class="pro">${c.pro}</div>
-        <div class="con">${c.con}</div>
-      </div>
-    </div>
-  `).join('');
-
-  selectedChoice = null;
-  document.getElementById('confirm-btn').classList.remove('active');
-  startRoundTimer();
-}
-
-// ── Timer ──────────────────────────────────────────────
-function startRoundTimer() {
-  clearInterval(timerInterval);
-  roundStartTime = Date.now();
-  updateTimerUI(ROUND_TIME);
-
-  timerInterval = setInterval(() => {
-    const elapsed = (Date.now() - roundStartTime) / 1000;
-    const remaining = Math.max(0, ROUND_TIME - elapsed);
-    updateTimerUI(remaining);
-    if (remaining <= 0) {
-      clearInterval(timerInterval);
-      // auto-confirm if selected, else pick worst
-      if (!selectedChoice) {
-        const rd = ROUNDS[currentRound];
-        selectChoice(rd.choices[0].id);
-      }
-      confirmChoice();
-    }
-  }, 200);
-}
-
-function stopTimer() { clearInterval(timerInterval); }
-
-function updateTimerUI(remaining) {
-  const pct = (remaining / ROUND_TIME) * 100;
-  const fill = document.getElementById('timer-fill');
-  const val = document.getElementById('timer-val');
-  fill.style.width = pct + '%';
-  fill.style.background = remaining > 45 ? 'var(--green)' : remaining > 20 ? 'var(--gold)' : 'var(--red)';
-  val.style.color = remaining > 45 ? 'var(--green)' : remaining > 20 ? 'var(--gold)' : 'var(--red)';
-  val.textContent = Math.ceil(remaining) + 's';
-}
-
-// ── Select ─────────────────────────────────────────────
-function selectChoice(id) {
-  if (selectedChoice === id) {
-    selectedChoice = null;
-    document.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected', 'disabled'));
-    document.getElementById('confirm-btn').classList.remove('active');
-    return;
-  }
-  selectedChoice = id;
-  document.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected', 'disabled'));
-  document.getElementById('card-' + id).classList.add('selected');
-  document.querySelectorAll('.choice-card:not(#card-' + id + ')').forEach(c => c.classList.add('disabled'));
-  document.getElementById('confirm-btn').classList.add('active');
-}
-
-// ── Confirm ────────────────────────────────────────────
-function confirmChoice() {
-  if (!selectedChoice) return;
-  stopTimer();
-
-  const secondsUsed = Math.min(ROUND_TIME, (Date.now() - roundStartTime) / 1000);
-  totalTimePenalty += secondsUsed;
-
-  const rd = ROUNDS[currentRound];
-  const choice = rd.choices.find(c => c.id === selectedChoice);
-  const isOptimal = selectedChoice === rd.bestChoice;
-  const outcome = choice.outcome;
-
-  // Time bonus: up to 20 extra points for fast decision (< 10s = full, scales down)
-  const timeBonus = Math.round(Math.max(0, (1 - secondsUsed / ROUND_TIME)) * 20);
-  const basePts = isOptimal ? outcome.score : Math.round(outcome.score * 0.4);
-  const pts = basePts + timeBonus;
-
-  totalScore += pts;
-  sicherheit = Math.min(100, Math.max(0, sicherheit + outcome.sicherheit));
-  flex = Math.min(100, Math.max(0, flex + outcome.flex));
-  updateMeters();
-
-  document.getElementById('result-title').textContent = isOptimal ? '✓ Starke Entscheidung' : '⚠ Suboptimal';
-  document.getElementById('result-title').style.color = isOptimal ? 'var(--green)' : 'var(--gold)';
-  document.getElementById('result-subtitle').textContent = `Runde ${currentRound + 1} von ${ROUNDS.length} — ${choice.title} · ⏱ ${Math.round(secondsUsed)}s`;
-  document.getElementById('result-outcome').innerHTML = (isOptimal ? outcome.good : outcome.bad) +
-    `<br><br><span style="font-size:.75rem;color:var(--muted);">Basispunkte: ${basePts} · Zeitbonus: +${timeBonus}</span>`;
-  document.getElementById('result-score-val').textContent = '+' + pts;
-  document.getElementById('result-score-val').style.color = isOptimal ? 'var(--green)' : 'var(--gold)';
-
-  const nextBtn = document.querySelector('.btn-next');
-  nextBtn.textContent = currentRound >= ROUNDS.length - 1 ? 'Ergebnis sehen →' : 'Nächste Runde →';
-
-  document.getElementById('result-overlay').classList.add('show');
-}
-
-function nextRound() {
-  document.getElementById('result-overlay').classList.remove('show');
-  currentRound++;
-  if (currentRound >= ROUNDS.length) showFinal();
-  else showReadyScreen();
-}
-
-// ── Final + Leaderboard save ───────────────────────────
-async function showFinal() {
-  const pct = Math.round((totalScore / (ROUNDS.length * 100)) * 100);
-  const grade = pct >= 85 ? ['AAA', 'var(--green)', 'Exzellenter Risikomanager!']
-              : pct >= 60 ? ['B+',  'var(--gold)',  'Solide Strategie mit Optimierungspotenzial.']
-              :              ['C',   'var(--red)',   'Commodity-Korrelationen stärker beachten!'];
-
-  const avgTime = Math.round(totalTimePenalty / ROUNDS.length);
-
-  // Save to leaderboard
-  await saveScore(playerName, totalScore, avgTime, grade[0]);
-
-  document.getElementById('result-overlay').classList.add('show');
-  document.getElementById('result-box').innerHTML = `
-    <div class="final-box">
-      <div class="tag" style="color:${grade[1]};border-color:${grade[1]};">▸ Spiel beendet — ${playerName}</div>
-      <div class="result-score" style="color:${grade[1]};font-size:5rem;margin-top:1rem;">${grade[0]}</div>
-      <div class="result-score-label">Rating</div>
-      <div class="result-score" style="color:var(--text);font-size:3rem;">${totalScore} Pkt</div>
-      <div class="result-score-label" style="margin-bottom:.3rem;">Gesamtpunkte · Ø ${avgTime}s / Runde</div>
-      <div class="result-outcome" style="margin:1.2rem 0;">${grade[2]}</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1.5rem;font-size:.72rem;color:var(--muted);">
-        <div style="padding:.8rem;background:rgba(255,255,255,.03);border-radius:6px;">
-          Planungssicherheit<br><span style="color:var(--blue);font-family:'Bebas Neue';font-size:1.5rem;">${sicherheit}%</span>
-        </div>
-        <div style="padding:.8rem;background:rgba(255,255,255,.03);border-radius:6px;">
-          Flexibilität<br><span style="color:var(--green);font-family:'Bebas Neue';font-size:1.5rem;">${flex}%</span>
-        </div>
-      </div>
-      <div style="margin-bottom:.8rem;">
-        <button class="btn-next" style="width:100%;" onclick="submitScoreToGoogleForm('${playerName.replace(/'/g, "\'")}', ${totalScore}, ${avgTime}, '${grade[0]}')">📩 Score absenden</button>
-      </div>
-    </div>
-  `;
-}
-
-// ── Storage helpers (lokal im Browser) ───────────────────
-async function loadScores() {
-  try {
-    const raw = localStorage.getItem('agrana-leaderboard');
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch { return []; }
-}
-
-async function saveScore(name, score, avgTime, grade) {
-  try {
-    const scores = await loadScores();
-    scores.push({ name, score, avgTime, grade, date: new Date().toLocaleDateString('de-DE') });
-    scores.sort((a, b) => b.score - a.score || a.avgTime - b.avgTime);
-    const top = scores.slice(0, 20);
-    localStorage.setItem('agrana-leaderboard', JSON.stringify(top));
-  } catch(e) { console.error('Storage error:', e); }
-}
-
-async function clearLeaderboard() {
-  if (!confirm('Leaderboard wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) return;
-  localStorage.removeItem('agrana-leaderboard');
-  renderLeaderboard([]);
-}
-
-function buildGoogleFormUrl(name, score, avgTime, grade) {
-  if (!FORM_CONFIG.GOOGLE_FORM_VIEW_URL) return '';
-  const url = new URL(FORM_CONFIG.GOOGLE_FORM_VIEW_URL);
-  url.searchParams.set('usp', 'pp_url');
-  if (FORM_CONFIG.ENTRY_NAME) url.searchParams.set(FORM_CONFIG.ENTRY_NAME, name);
-  if (FORM_CONFIG.ENTRY_SCORE) url.searchParams.set(FORM_CONFIG.ENTRY_SCORE, score);
-  if (FORM_CONFIG.ENTRY_AVG_TIME) url.searchParams.set(FORM_CONFIG.ENTRY_AVG_TIME, String(parseInt(avgTime, 10) || 0));
-  if (FORM_CONFIG.ENTRY_GRADE) url.searchParams.set(FORM_CONFIG.ENTRY_GRADE, grade);
-  return url.toString();
-}
-
-function submitScoreToGoogleForm(name, score, avgTime, grade) {
-  const formUrl = buildGoogleFormUrl(name, score, avgTime, grade);
-  if (!formUrl) {
-    alert('Bitte zuerst in FORM_CONFIG die Google-Form-URL und entry-IDs eintragen.');
-    return;
-  }
-  window.open(formUrl, '_blank');
-}
-
-// ── Leaderboard UI ─────────────────────────────────────
-let lbFromNameScreen = false;
-
-async function showLeaderboard(fromNameScreen) {
-  lbFromNameScreen = fromNameScreen;
-  document.getElementById('lb-overlay').classList.add('show');
-  document.getElementById('lb-rows').innerHTML = `<div class="lb-empty">Lade...</div>`;
-  const scores = await loadScores();
-  renderLeaderboard(scores);
-}
-
-function renderLeaderboard(scores) {
-  const rowsEl = document.getElementById('lb-rows');
-  if (!scores.length) {
-    rowsEl.innerHTML = `<div class="lb-empty">Noch keine Einträge. Sei der Erste!</div>`;
-    return;
-  }
-  const medals = ['gold-row', 'silver-row', 'bronze-row'];
-  const rankSymbols = ['🥇', '🥈', '🥉'];
-  rowsEl.innerHTML = scores.map((s, i) => `
-    <div class="lb-row ${medals[i] || ''}">
-      <div class="lb-rank">${i < 3 ? rankSymbols[i] : '#' + (i+1)}</div>
-      <div>
-        <div class="lb-name">${escHtml(s.name)}</div>
-        <div class="lb-meta">${s.grade} · ${s.date}</div>
-      </div>
-      <div class="lb-time">Ø ${s.avgTime}s</div>
-      <div class="lb-score-val">${s.score}</div>
-    </div>
-  `).join('');
-}
-
-function closeLeaderboard() {
-  document.getElementById('lb-overlay').classList.remove('show');
-  if (lbFromNameScreen) {
-    // reset result box if needed
-    document.getElementById('result-box').innerHTML = `
-      <div class="result-title" id="result-title">Ergebnis</div>
-      <div class="result-subtitle" id="result-subtitle">Runde 1 von 3</div>
-      <div class="result-outcome" id="result-outcome"></div>
-      <div class="result-score" id="result-score-val"></div>
-      <div class="result-score-label">Punkte in dieser Runde</div>
-      <div class="result-btns">
-        <button class="btn-next" onclick="nextRound()">Nächste Runde →</button>
-        <button class="btn-retry" onclick="restartGame()">Neustart</button>
-      </div>
-    `;
-  }
-}
-
-function escHtml(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// ── Restart ────────────────────────────────────────────
-function restartGame() {
-  stopTimer();
-  document.getElementById('result-overlay').classList.remove('show');
-  document.getElementById('lb-overlay').classList.remove('show');
-  document.getElementById('ready-screen').classList.add('hidden');
-  document.getElementById('result-box').innerHTML = `
-    <div class="result-title" id="result-title">Ergebnis</div>
-    <div class="result-subtitle" id="result-subtitle">Runde 1 von 3</div>
-    <div class="result-outcome" id="result-outcome"></div>
-    <div class="result-score" id="result-score-val"></div>
-    <div class="result-score-label">Punkte in dieser Runde</div>
-    <div class="result-btns">
-      <button class="btn-next" onclick="nextRound()">Nächste Runde →</button>
-      <button class="btn-retry" onclick="restartGame()">Neustart</button>
-    </div>
-  `;
-  document.getElementById('player-name').value = '';
-  document.getElementById('name-screen').classList.remove('hidden');
-}
-
-function updateMeters() {
-  document.getElementById('m-sicherheit').textContent = sicherheit + '%';
-  document.getElementById('mb-sicherheit').style.width = sicherheit + '%';
-  document.getElementById('m-flex').textContent = flex + '%';
-  document.getElementById('mb-flex').style.width = flex + '%';
-  const scorePct = Math.min(100, Math.round(totalScore / (ROUNDS.length * 120) * 100));
-  document.getElementById('m-score').textContent = totalScore;
-  document.getElementById('mb-score').style.width = scorePct + '%';
-}
-
-// Ticker animation
-setInterval(() => {
-  document.querySelectorAll('.ticker-item').forEach(el => {
-    el.classList.toggle('up', Math.random() > 0.4);
-    el.classList.toggle('down', Math.random() <= 0.4);
+// ══════════════════════════════════════════════════════
+// BACKGROUND
+// ══════════════════════════════════════════════════════
+function initBg(){
+  var bg=document.getElementById("bgLayer");
+  [{s:450,c:"rgba(91,155,214,0.05)",t:"8%",l:"-8%",d:20},{s:550,c:"rgba(56,217,169,0.03)",t:"25%",l:"60%",d:24},{s:400,c:"rgba(91,155,214,0.04)",t:"55%",l:"20%",d:18},{s:500,c:"rgba(124,189,232,0.04)",t:"70%",l:"75%",d:22}].forEach(function(o,i){
+    var d=document.createElement("div");d.className="bg-orb";
+    d.style.cssText="width:"+o.s+"px;height:"+o.s+"px;top:"+o.t+";left:"+o.l+";background:radial-gradient(circle,"+o.c+",transparent 70%);animation:floatOrb "+o.d+"s ease-in-out infinite alternate;animation-delay:"+(i*-3)+"s";
+    bg.appendChild(d);
   });
-}, 3000);
+}
+
+// ══════════════════════════════════════════════════════
+// RADAR
+// ══════════════════════════════════════════════════════
+function radarSVG(scores){
+  var sz=340,cx=sz/2,cy=sz/2,r=sz*.37,keys=Object.keys(DIMS),n=keys.length,st=2*Math.PI/n,off=-Math.PI/2;
+  var mx=Math.max.apply(null,keys.map(function(k){return scores[k]||0}))||1;
+  function pt(i,v){var a=off+i*st;return[cx+r*v*Math.cos(a),cy+r*v*Math.sin(a)]}
+  var s='<svg viewBox="0 0 '+sz+' '+sz+'" style="width:100%;max-width:'+sz+'px;display:block;margin:0 auto"><defs><linearGradient id="rf" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="rgba(91,155,214,0.3)"/><stop offset="100%" stop-color="rgba(56,217,169,0.15)"/></linearGradient><filter id="gl"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>';
+  [.25,.5,.75,1].forEach(function(l){var pts=keys.map(function(_,i){return pt(i,l).join(",")}).join(" ");s+='<polygon points="'+pts+'" fill="none" stroke="rgba(91,155,214,0.08)" stroke-width="1"/>'});
+  keys.forEach(function(_,i){var e=pt(i,1);s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+e[0].toFixed(1)+'" y2="'+e[1].toFixed(1)+'" stroke="rgba(91,155,214,0.07)" stroke-width="1"/>'});
+  var dp=keys.map(function(k,i){return pt(i,Math.max((scores[k]||0)/mx,0.08))});
+  var pd=dp.map(function(p,i){return(i===0?"M":"L")+p[0].toFixed(1)+","+p[1].toFixed(1)}).join(" ")+"Z";
+  s+='<path d="'+pd+'" fill="url(#rf)" stroke="rgba(91,155,214,0.8)" stroke-width="2.5" filter="url(#gl)" style="animation:radarGrow .8s ease-out .3s both"/>';
+  keys.forEach(function(k,i){var v=Math.max((scores[k]||0)/mx,0.08);var p=pt(i,v);s+='<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="5" fill="var(--b3)" stroke="#fff" stroke-width="2" style="animation:popIn .4s ease-out '+(0.5+i*0.1)+'s both"/>'});
+  keys.forEach(function(k,i){var lp=pt(i,1.22);s+='<text x="'+lp[0].toFixed(1)+'" y="'+lp[1].toFixed(1)+'" text-anchor="middle" dominant-baseline="middle" style="font-size:11px;fill:rgba(200,215,230,0.7);font-family:DM Sans,sans-serif;font-weight:500">'+DIMS[k]+'</text>'});
+  return s+'</svg>';
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════════════
+function render(){
+  var app=document.getElementById("app");
+
+  // ─── INTRO ───
+  if(S.phase==="intro"){
+    app.innerHTML=
+      '<div class="card" style="max-width:620px">'+
+        '<div class="badge">\uD83C\uDFAE F\u00fchrungskr\u00e4fte-Einmaleins</div>'+
+        '<h1 class="title">F\u00fchrungsmoment</h1>'+
+        '<p class="subtitle">Ein interaktives Planspiel \u2013 erlebe einen Tag als F\u00fchrungskraft und entdecke deinen pers\u00f6nlichen F\u00fchrungsstil.</p>'+
+        '<div class="kurs-box"><div style="font-size:24px;flex-shrink:0;margin-top:2px">\uD83C\uDFAC</div><div class="kb-text">Dieses Spiel ist der <strong>Abschluss der Videoreihe</strong>. Du hast bereits sieben zentrale F\u00fchrungssituationen kennengelernt. Jetzt testest du: Wie w\u00fcrdest du selbst entscheiden?</div></div>'+
+        '<div class="divider"></div>'+
+        '<p class="body-text" style="text-align:center;color:var(--b2);font-weight:500">W\u00e4hle dein Profil:</p>'+
+        '<div class="profile-grid">'+
+          '<div class="profile-card new-p" onclick="selectProfile(\'new\')">'+
+            '<span class="pc-icon">\uD83C\uDF31</span>'+
+            '<div class="pc-title">Ich bin neu in der F\u00fchrung</div>'+
+            '<div class="pc-desc">Erste F\u00fchrungsrolle oder kurz davor. Du willst herausfinden, wie du als F\u00fchrungskraft tickst.</div>'+
+            '<span class="pc-tag">Dein erster Tag</span>'+
+          '</div>'+
+          '<div class="profile-card exp-p" onclick="selectProfile(\'exp\')">'+
+            '<span class="pc-icon">\uD83C\uDFC6</span>'+
+            '<div class="pc-title">Ich f\u00fchre schon l\u00e4nger</div>'+
+            '<div class="pc-desc">Du hast Erfahrung. Jetzt willst du deine Muster erkennen und deinen Stil bewusst hinterfragen.</div>'+
+            '<span class="pc-tag">Ein Tag wie jeder \u2013 oder?</span>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
+    return;
+  }
+
+  // ─── PRE-GAME (after profile select, before first scenario) ───
+  if(S.phase==="pregame"){
+    var cfg=PROFILE_CFG[S.profile];
+    var preview=cfg.scenarios.map(function(sc){return'<div class="day-slot"><span class="ds-time">'+sc.time+'</span><span style="font-size:16px">'+sc.icon+'</span>'+sc.tag+'</div>'}).join("");
+    app.innerHTML=
+      '<div class="card">'+
+        '<div class="badge">'+cfg.badge+'</div>'+
+        '<h1 class="title">'+cfg.title+'</h1>'+
+        '<p class="subtitle">'+cfg.subtitle+'</p>'+
+        '<div class="kurs-box"><div style="font-size:24px;flex-shrink:0;margin-top:2px">\uD83D\uDCA1</div><div class="kb-text">'+cfg.kursText+'</div></div>'+
+        '<div class="divider"></div>'+
+        '<p class="body-text" style="font-size:13px;color:var(--g4)">Dein Tag von 08:00 bis 16:45 \u2013 in jeder Situation entscheidest du:</p>'+
+        '<div class="day-preview">'+preview+'</div>'+
+        '<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button class="next-btn start-btn" onclick="startGame()">Tag starten \u2192</button><button class="next-btn outline-btn" onclick="up({phase:\'intro\',profile:null})" style="margin-top:16px">\u2190 Zur\u00fcck</button></div>'+
+      '</div>';
+    return;
+  }
+
+  // ─── GAME ───
+  if(S.phase==="game"){
+    var cfg=PROFILE_CFG[S.profile];
+    var scs=cfg.scenarios;
+    var sc=scs[S.si];
+    var progress=((S.si+(S.showResult?1:0))/scs.length)*100;
+
+    var hudHtml='<div class="hud"><div style="display:flex;align-items:center;gap:16px"><div><div class="clock">'+sc.time+'</div><div class="clock-label">Uhr</div></div></div><div class="xp-box"><span style="font-size:16px">\u2B50</span><span class="xp-val" id="xpVal">'+S.xp+'</span><span class="xp-label">XP</span>'+(S.xpFloat?'<span class="xp-float">+10</span>':'')+'</div></div>';
+    var tlHtml='<div class="timeline"><div class="timeline-fill" style="width:'+progress+'%"><div class="timeline-dot"></div></div></div><div class="tl-labels"><span>08:00</span><span>16:45</span></div>';
+    var traitsHtml=S.traits.length?'<div class="traits-collected">'+S.traits.map(function(t){return'<span class="tc">\u2713 '+t+'</span>'}).join("")+'</div>':'';
+    var optsHtml=sc.options.map(function(opt,oi){var cls="option";if(S.chosen!==null){cls+=" disabled";if(S.chosen===oi)cls+=" chosen";else cls+=" not-chosen"}return'<button class="'+cls+'" '+(S.chosen!==null?'disabled':'')+' onclick="choose('+oi+')"><span class="opt-key">'+(oi===0?'A':'B')+'</span><span>'+opt.text+'</span></button>'}).join("");
+
+    var resHtml='';
+    if(S.showResult){
+      var opt=sc.options[S.chosen];
+      var isLast=S.si>=scs.length-1;
+      resHtml='<div class="result"><p class="result-text">'+opt.consequence+'</p><div class="trait-reveal"><span style="font-size:20px">\uD83D\uDD13</span><div class="trait-info"><div class="trait-label">Eigenschaft entdeckt</div><div class="trait-name">'+opt.trait+'</div></div></div><div style="text-align:right"><button class="next-btn" onclick="nextScenario()">'+(isLast?'Ergebnis ansehen \u2192':'Weiter \u2192')+'</button></div></div>';
+    }
+
+    app.innerHTML='<div class="card">'+hudHtml+tlHtml+traitsHtml+'<div class="sc-header"><span class="sc-emoji">'+sc.icon+'</span><span class="sc-tag">'+sc.tag+'</span></div><h2 class="sc-title">'+sc.title+'</h2><div class="sc-text">'+sc.text+'</div>'+optsHtml+resHtml+'</div>';
+    return;
+  }
+
+  // ─── RESULT ───
+  if(S.phase==="result"){
+    var cfg=PROFILE_CFG[S.profile];
+    var scores=S.scores;
+    var maxDim=Object.keys(DIMS).reduce(function(a,b){return scores[a]>scores[b]?a:b});
+    var myType=TYPES.find(function(t){return t.primary===maxDim})||TYPES[0];
+    var sorted=Object.keys(DIMS).map(function(k){return{key:k,val:scores[k]}}).sort(function(a,b){return b.val-a.val});
+    var topTwo=sorted.slice(0,2).map(function(d){return DIMS[d.key]});
+    var lowTwo=sorted.slice(-2).map(function(d){return DIMS[d.key]});
+    var traitsHtml='<div class="traits-collected" style="justify-content:center;margin:16px 0 0">'+S.traits.map(function(t){return'<span class="tc">\u2713 '+t+'</span>'}).join("")+'</div>';
+    var reflHtml=cfg.reflections.map(function(r){return'<p class="reflection">'+r+'</p>'}).join("");
+
+    app.innerHTML=
+      '<div class="card" style="max-width:720px;text-align:center">'+
+        '<div class="badge">\uD83C\uDFC6 Dein Ergebnis</div>'+
+        '<h1 class="title">'+cfg.resultTitle+'</h1>'+
+        '<p class="subtitle">'+cfg.resultSubtitle+'</p>'+
+        '<div style="display:flex;justify-content:center;margin-bottom:8px"><div class="xp-box"><span style="font-size:16px">\u2B50</span><span class="xp-val">'+S.xp+'</span><span class="xp-label">XP gesammelt</span></div></div>'+
+        traitsHtml+
+        '<div class="compass">'+radarSVG(scores)+'</div>'+
+        '<div class="type-box"><div class="type-label">Dein F\u00fchrungstyp</div><div class="type-name">'+myType.name+'</div><div class="type-desc">'+myType.desc+'</div></div>'+
+        '<div style="text-align:left">'+
+          '<div class="insight"><h4>\u2726 Deine St\u00e4rken</h4><p>Besonders ausgepr\u00e4gt bei dir: <strong style="color:var(--b2)">'+topTwo.join(" &amp; ")+'</strong>. Diese Dimensionen waren in deinen Entscheidungen am pr\u00e4sentesten.</p></div>'+
+          '<div class="insight"><h4>\u2192 Entwicklungspotenzial</h4><p>Weniger stark vertreten: <strong style="color:var(--acc)">'+lowTwo.join(" &amp; ")+'</strong>. Das k\u00f6nnten Themen f\u00fcr den Workshop sein.</p></div>'+
+          '<div class="divider"></div>'+
+          '<div class="insight"><h4>\uD83D\uDCAC Reflexionsfragen f\u00fcr den Workshop</h4>'+reflHtml+'</div>'+
+          '<div class="kurs-box" style="margin-top:20px;margin-bottom:0"><div style="font-size:24px;flex-shrink:0;margin-top:2px">\uD83D\uDE80</div><div class="kb-text">'+cfg.workshopText+'</div></div>'+
+          '<div style="text-align:center;margin-top:24px"><button class="next-btn outline-btn" onclick="resetAll()">\u21BB Nochmal spielen</button></div>'+
+        '</div>'+
+      '</div>';
+    return;
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// HANDLERS
+// ══════════════════════════════════════════════════════
+function selectProfile(p){up({phase:"pregame",profile:p})}
+function startGame(){up({phase:"game",si:0,chosen:null,showResult:false,scores:{empathie:0,entscheidung:0,kommunikation:0,struktur:0,mut:0,reflexion:0},xp:0,xpFloat:false,traits:[]})}
+function choose(idx){
+  var scs=PROFILE_CFG[S.profile].scenarios;
+  var opt=scs[S.si].options[idx];
+  var ns={};Object.keys(S.scores).forEach(function(k){ns[k]=S.scores[k]+(opt.dims[k]||0)});
+  var nt=S.traits.slice();nt.push(opt.trait);
+  up({chosen:idx,showResult:true,scores:ns,xp:S.xp+10,xpFloat:true,traits:nt});
+  setTimeout(function(){S.xpFloat=false},1300);
+}
+function nextScenario(){
+  var scs=PROFILE_CFG[S.profile].scenarios;
+  if(S.si>=scs.length-1)up({phase:"result"});
+  else up({si:S.si+1,chosen:null,showResult:false,xpFloat:false});
+}
+function resetAll(){up({phase:"intro",profile:null,si:0,chosen:null,showResult:false,scores:{empathie:0,entscheidung:0,kommunikation:0,struktur:0,mut:0,reflexion:0},xp:0,xpFloat:false,traits:[]})}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+initBg();
+render();
 </script>
 </body>
 </html>
